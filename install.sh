@@ -50,4 +50,4 @@ if [ "$ACTIVATE" = 1 ]; then
     gsettings set org.gnome.desktop.interface icon-theme MoreWaita-Folders
     echo "icon theme set to MoreWaita-Folders (undo: gsettings set org.gnome.desktop.interface icon-theme Adwaita)"
 fi
-echo "next: ./apply-folder-icons.sh --dry-run folders.conf"
+echo "next: ./apply-folder-icons.sh --dry-run   (uses folders.local.conf, else the example folders.conf)"

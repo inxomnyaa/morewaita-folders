@@ -2,12 +2,15 @@
 
 Distinct folder icons for GNOME Files (Nautilus) in the Adwaita/[MoreWaita](https://github.com/somepaulo/MoreWaita) style.
 
+This is not a fork of MoreWaita. It's a small add-on theme that sits on top of it: the build downloads MoreWaita, reuses its folder shape, and adds its own emblems.
+
 ![preview](docs/preview.png)
 
 GNOME's Adwaita theme ships icons for Music, Videos, Pictures and the other standard folders only at 16px. In Files' grid view, every folder therefore looks the same. This small add-on theme fixes that and adds a few more:
 
 - **Large icons for the standard XDG folders:** Desktop, Documents, Downloads, Music, Pictures, Videos, Templates and Public. These are made from Adwaita's own glyphs and apply automatically, with no per-folder setup.
 - **Console folders** for emulator libraries: Game Boy, GBA, DS, 3DS, Switch, Wii U and Amiibo. They're simple line drawings of the devices, not logos.
+- **A keg folder** for Homebrew, or Decky Loader's `homebrew` folder. 🍺
 - **Size-matched MoreWaita icons.** MoreWaita draws its emblems smaller than Adwaita's glyphs. The build measures every emblem and scales it, so all folders have the same visual weight.
 - **A different AppImage icon:** a program icon instead of MoreWaita's arrow and gear.
 
@@ -59,7 +62,8 @@ The script uses `folders.local.conf` if it exists, otherwise the example `folder
 | `folder-music`, `folder-videos`, `folder-pictures`, `folder-documents`, `folder-download(s)`, `folder-templates`, `folder-publicshare` | Adwaita's glyph for that folder |
 | `user-desktop` | monitor |
 | `folder-appimage` | Adwaita's "executable" glyph |
-| `folder-emu-gameboy`, `-gba`, `-nds`, `-3ds`, `-switch`, `-wiiu`, `-amiibo` | own drawings in `glyphs/` |
+| `folder-emu-gameboy`, `folder-emu-gba`, `folder-emu-nds`, `folder-emu-3ds`, `folder-emu-switch`, `folder-emu-wiiu`, `folder-emu-amiibo` | own drawings in `glyphs/`: Game Boy, GBA, DS, 3DS, Switch, Wii U GamePad, Amiibo figure |
+| `folder-keg` | own drawing in `glyphs/`: keg |
 | `folder-projects`, `folder-games`, `folder-backup`, `folder-3dbenchy`, `folder-code`, `folder-games-card`, `folder-roms`, `folder-computer`, `folder-windows` | MoreWaita's emblem, re-scaled |
 
 ## Adding or changing icons
@@ -84,4 +88,4 @@ rm -rf ~/.local/share/icons/MoreWaita-Folders ~/.local/share/icons/MoreWaita
 
 ## License
 
-GPL-3.0, same as MoreWaita. The generated icons combine MoreWaita's folder shape and emblems (GPL-3.0, © MoreWaita contributors) with Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0, © GNOME Project). Neither is stored in this repo; they're fetched or read at build time. The console glyphs in `glyphs/` are original work.
+GPL-3.0, same as MoreWaita. The generated icons combine MoreWaita's folder shape and emblems (GPL-3.0, © MoreWaita contributors) with Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0, © GNOME Project). Their files aren't stored in this repo; they're fetched or read at build time. The only exception is the rendered `docs/preview.png`, which falls under the same licenses. The console and keg glyphs in `glyphs/` are original work.

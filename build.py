@@ -47,6 +47,7 @@ ICONS = {
     "folder-emu-switch": "own:switch",
     "folder-emu-wiiu": "own:wiiu",
     "folder-emu-amiibo": "own:amiibo",
+    "folder-keg": "own:keg",                      # Homebrew / Decky "homebrew" folder
     # MoreWaita icons re-scaled to match (MoreWaita draws emblems in a 32px box, Adwaita glyphs fill ~47px)
     **{n: f"mw:{n}" for n in [
         "folder-projects", "folder-games", "folder-backup", "folder-3dbenchy", "folder-code",
