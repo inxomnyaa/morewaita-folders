@@ -62,8 +62,7 @@ The script uses `folders.local.conf` if it exists, otherwise the example `folder
 | `folder-music`, `folder-videos`, `folder-pictures`, `folder-documents`, `folder-download(s)`, `folder-templates`, `folder-publicshare` | Adwaita's glyph for that folder |
 | `user-desktop` | monitor |
 | `folder-appimage` | Adwaita's "executable" glyph |
-| `folder-emu-gameboy`, `folder-emu-gba`, `folder-emu-nds`, `folder-emu-3ds`, `folder-emu-switch`, `folder-emu-wiiu`, `folder-emu-amiibo` | own drawings in `glyphs/`: Game Boy, GBA, DS, 3DS, Switch, Wii U GamePad, Amiibo figure |
-| `folder-keg` | own drawing in `glyphs/`: keg |
+| `folder-emu-gameboy`, `folder-emu-gba`, `folder-emu-nds`, `folder-emu-3ds`, `folder-emu-switch`, `folder-emu-wiiu`, `folder-emu-amiibo`, `folder-keg` | own drawings in `glyphs/`: Game Boy, GBA, DS, 3DS, Switch, Wii U GamePad, Amiibo figure, keg |
 | `folder-projects`, `folder-games`, `folder-backup`, `folder-3dbenchy`, `folder-code`, `folder-games-card`, `folder-roms`, `folder-computer`, `folder-windows` | MoreWaita's emblem, re-scaled |
 
 ## Adding or changing icons
