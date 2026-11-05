@@ -53,4 +53,4 @@ rm -rf ~/.local/share/icons/MoreWaita-Folders ~/.local/share/icons/MoreWaita
 
 ## License
 
-GPL-3.0, like MoreWaita. Uses MoreWaita's folder shape and emblems, plus Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0).
+GPL-3.0, like MoreWaita. Uses MoreWaita's folder shape and emblems, plus Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0). The PlayStation logo is from Simple Icons (CC0), the N64 logo from file-icons (ISC, © John Gardner); both are trademarks of their owners.

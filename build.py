@@ -33,7 +33,6 @@ ICONS = {
     "folder-pictures": "adw:folder-pictures",
     "folder-documents": "adw:folder-documents",
     "folder-download": "adw:folder-download",
-    "folder-downloads": "adw:folder-download",
     "user-desktop": "adw:video-display",          # Adwaita's own desktop glyph is a folder-in-folder
     "folder-templates": "adw:folder-templates",
     "folder-publicshare": "adw:folder-publicshare",
@@ -42,15 +41,25 @@ ICONS = {
     # consoles (original line drawings in glyphs/, no logos)
     "folder-emu-gameboy": "own:gameboy",
     "folder-emu-gba": "own:gba",
+    "folder-emu-gbasp": "own:gbasp",
     "folder-emu-nds": "own:nds",
     "folder-emu-3ds": "own:3ds",
     "folder-emu-switch": "own:switch",
     "folder-emu-wiiu": "own:wiiu",
     "folder-emu-amiibo": "own:amiibo",
+    "folder-emu-nes": "own:nes",
+    "folder-emu-snes": "own:snes",
+    "folder-emu-n64": "own:logo-n64",
+    "folder-emu-gamecube": "own:gamecube",
+    "folder-emu-wii": "own:wii",
+    "folder-emu-playstation": "own:logo-playstation",
+    "folder-emu-psp": "own:psp",
+    "folder-emu-arcade": "own:arcade",
+    "folder-code": "own:code",                    # MoreWaita's brackets are thinner than everything else
     "folder-keg": "own:keg",                      # Homebrew / Decky "homebrew" folder
     # MoreWaita icons re-scaled to match (MoreWaita draws emblems in a 32px box, Adwaita glyphs fill ~47px)
     **{n: f"mw:{n}" for n in [
-        "folder-projects", "folder-games", "folder-backup", "folder-3dbenchy", "folder-code",
+        "folder-projects", "folder-games", "folder-backup", "folder-3dbenchy",
         "folder-games-card", "folder-roms", "folder-computer", "folder-windows",
     ]},
 }
@@ -81,12 +90,15 @@ def glyph_markup(spec):
         f = hits[0]
     else:
         f = HERE / "glyphs" / f"{name}.svg"
-    inner = re.search(r"<svg[^>]*>(.*)</svg>", f.read_text(), re.S).group(1)
+    m = re.search(r"<svg([^>]*)>(.*)</svg>", f.read_text(), re.S)
+    vb = re.search(r'viewBox="([^"]+)"', m.group(1))
+    viewbox = vb.group(1) if vb else "0 0 16 16"  # logos come in other sizes; measuring rescales them
+    inner = m.group(2)
     inner = re.sub(r'\sfill="#[0-9a-fA-F]+"', "", inner)  # drop Adwaita's hardcoded #2e3436
     inner = inner.replace("currentColor", COLOR)
     x, y, s = GLYPH_BOX
-    # nested <svg> clips to the 16x16 box: some Adwaita glyphs hide extra drawings outside it
-    return (f'<svg xmlns="{SVGNS}" x="{x}" y="{y}" width="{s}" height="{s}" viewBox="0 0 16 16" '
+    # nested <svg> clips to the glyph's box: some Adwaita glyphs hide extra drawings outside it
+    return (f'<svg xmlns="{SVGNS}" x="{x}" y="{y}" width="{s}" height="{s}" viewBox="{viewbox}" '
             f'overflow="hidden"><g fill="{COLOR}">{inner}</g></svg>')
 
 
@@ -128,6 +140,11 @@ def main():
 
     icons = {n: emblem(s, a.morewaita) for n, s in ICONS.items()}
     boxes = {n: measure(*e) for n, e in icons.items()}
+    for n, (defs, body) in icons.items():  # warn about glyphs drawn past their grid (they get cut off)
+        if 'overflow="hidden"' in body and ICONS[n].startswith("own:"):
+            free = measure(defs, body.replace('overflow="hidden"', 'overflow="visible"'))
+            if any(abs(a - b) > 0.3 for a, b in zip(free, boxes[n])):
+                print(f"  WARNING {n}: {ICONS[n]} reaches past the 16px grid and is clipped", file=sys.stderr)
     target = max(boxes[REF][2:])
 
     places = a.out / "scalable/places"

@@ -7,7 +7,7 @@ An add-on GNOME icon theme, `MoreWaita-Folders` (inherits MoreWaita → Adwaita 
 
 ## Files
 - `build.py`: generator. The `ICONS` dict is the only thing you usually edit.
-- `glyphs/*.svg`: own 16×16 emblems, drawn with `currentColor`. Strokes with a width of 1.5, round joins and caps.
+- `glyphs/*.svg`: own emblems on a 16×16 grid, drawn with `currentColor`, 2px strokes (Adwaita's weight), round joins and caps. Keep the outline inside 1..15, or the stroke gets clipped. `logo-*.svg` keep their original viewBox; `build.py` reads it.
 - `install.sh`: clones or updates MoreWaita into `.cache/`, builds, installs to `~/.local/share/icons/`, and sets gsettings. `--no-activate` skips gsettings.
 - `apply-folder-icons.sh` + `folders.local.conf` (the user's real list, gitignored) or `folders.conf` (a generic example): set `metadata::custom-icon-name` on folders via `gio`. Config lines are `<icon> <path>`, with the path relative to `$HOME`. Never put the user's personal folder names into the committed `folders.conf`.
 - `preview.sh`: writes `build/preview.png`, a contact sheet of all built icons. Look at it after every glyph change.
@@ -32,5 +32,5 @@ An add-on GNOME icon theme, `MoreWaita-Folders` (inherits MoreWaita → Adwaita 
 
 ## Don'ts
 - Don't commit MoreWaita or Adwaita files, or generated icons, apart from `docs/preview.png`. They're fetched or read at build time.
-- Don't use real console or company logos in `glyphs/`. Use simple device outlines only.
+- Logos (`glyphs/logo-*.svg`) only from permissively licensed sets (Simple Icons CC0, file-icons ISC, ...). Keep the source/licence/trademark comment at the top of the file. Everything else in `glyphs/` is drawn in-house.
 - Don't install system-wide, and don't touch `/usr`. Everything goes in `~/.local/share/icons`.
