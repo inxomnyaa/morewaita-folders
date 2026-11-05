@@ -9,8 +9,7 @@ This is not a fork of MoreWaita. It's a small add-on theme that sits on top of i
 GNOME's Adwaita theme ships icons for Music, Videos, Pictures and the other standard folders only at 16px. In Files' grid view, every folder therefore looks the same. This small add-on theme fixes that and adds a few more:
 
 - **Large icons for the standard XDG folders:** Desktop, Documents, Downloads, Music, Pictures, Videos, Templates and Public. These are made from Adwaita's own glyphs and apply automatically, with no per-folder setup.
-- **Console folders** for emulator libraries: Game Boy, GBA, DS, 3DS, Switch, Wii U and Amiibo. They're simple line drawings of the devices, not logos.
-- **A keg folder** for Homebrew, or Decky Loader's `homebrew` folder. 🍺
+- **Own drawings:** console folders for emulator libraries (Game Boy, GBA, DS, 3DS, Switch, Wii U and Amiibo), plus a keg 🍺 for Homebrew or Decky Loader's `homebrew` folder. They're simple line drawings, not logos.
 - **Size-matched MoreWaita icons.** MoreWaita draws its emblems smaller than Adwaita's glyphs. The build measures every emblem and scales it, so all folders have the same visual weight.
 - **A different AppImage icon:** a program icon instead of MoreWaita's arrow and gear.
 
