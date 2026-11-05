@@ -47,7 +47,9 @@ gtk-update-icon-cache -q -f -t "$ICONS/MoreWaita-Folders"
 echo "installed to $ICONS/MoreWaita and $ICONS/MoreWaita-Folders"
 
 if [ "$ACTIVATE" = 1 ]; then
-    gsettings set org.gnome.desktop.interface icon-theme MoreWaita-Folders
+    # system gsettings: other builds (e.g. Homebrew's) silently write to a dummy store
+    GSETTINGS=$( [ -x /usr/bin/gsettings ] && echo /usr/bin/gsettings || command -v gsettings )
+    "$GSETTINGS" set org.gnome.desktop.interface icon-theme MoreWaita-Folders
     echo "icon theme set to MoreWaita-Folders (undo: gsettings set org.gnome.desktop.interface icon-theme Adwaita)"
 fi
 echo "next: ./apply-folder-icons.sh --dry-run   (uses folders.local.conf, else the example folders.conf)"

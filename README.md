@@ -1,89 +1,56 @@
 # MoreWaita-Folders
 
-Distinct folder icons for GNOME Files (Nautilus) in the Adwaita/[MoreWaita](https://github.com/somepaulo/MoreWaita) style.
-
-This is not a fork of MoreWaita. It's a small add-on theme that sits on top of it: the build downloads MoreWaita, reuses its folder shape, and adds its own emblems.
+Folder icons for GNOME Files, built on top of [MoreWaita](https://github.com/somepaulo/MoreWaita) (not a fork).
 
 ![preview](docs/preview.png)
 
-GNOME's Adwaita theme ships icons for Music, Videos, Pictures and the other standard folders only at 16px. In Files' grid view, every folder therefore looks the same. This small add-on theme fixes that and adds a few more:
-
-- **Large icons for the standard XDG folders:** Desktop, Documents, Downloads, Music, Pictures, Videos, Templates and Public. These are made from Adwaita's own glyphs and apply automatically, with no per-folder setup.
-- **Own drawings:** console folders for emulator libraries (Game Boy, GBA, DS, 3DS, Switch, Wii U and Amiibo), plus a keg 🍺 for Homebrew or Decky Loader's `homebrew` folder. They're simple line drawings, not logos.
-- **Size-matched MoreWaita icons.** MoreWaita draws its emblems smaller than Adwaita's glyphs. The build measures every emblem and scales it, so all folders have the same visual weight.
-- **A different AppImage icon:** a program icon instead of MoreWaita's arrow and gear.
-
-The theme inherits MoreWaita, then Adwaita, so everything else looks as before.
-
 ## Install
 
-You need `git`, `python3`, ImageMagick 7 (`magick`, with SVG support via librsvg) and `gtk-update-icon-cache`. Fedora, Bazzite and Silverblue usually have all of these.
+Needs `git`, `python3`, ImageMagick 7 and `gtk-update-icon-cache`.
 
 ```sh
-git clone https://github.com/inxomnyaa/morewaita-folders.git
-cd morewaita-folders
 ./install.sh
 ```
 
-`install.sh` does the following:
+This downloads MoreWaita, builds the theme, installs both to `~/.local/share/icons/`, and sets `MoreWaita-Folders` as your icon theme. To skip setting the theme, pass `--no-activate`.
 
-1. It downloads MoreWaita into `.cache/MoreWaita`.
-2. It builds the theme into `build/`.
-3. It installs both MoreWaita and MoreWaita-Folders to `~/.local/share/icons/`. Nothing system-wide is touched, and no root is needed.
-4. It sets `MoreWaita-Folders` as your icon theme. Pass `--no-activate` to skip this step, or `--ref <tag|commit>` to pin a MoreWaita version.
+## Apply icons to folders
 
-## Give your own folders icons
-
-The standard folders are automatic. For any other folder, copy `folders.conf` to `folders.local.conf` (gitignored) and list the folder there, with the icon name first, then the path. Paths are relative to your home folder unless they start with `/`:
+Standard folders like Music and Downloads get their icons automatically. For other folders, copy `folders.conf` to `folders.local.conf` and list each folder with an icon name, then a path relative to your home folder:
 
 ```
 folder-games            Games
 folder-emu-switch       ROMs/Switch
-folder-code             src/my-app
 ```
 
-Then run:
-
 ```sh
-./apply-folder-icons.sh --dry-run    # shows what it would do
-./apply-folder-icons.sh              # applies it
-./apply-folder-icons.sh --reset      # removes the custom icons again
+./apply-folder-icons.sh --dry-run
+./apply-folder-icons.sh
+nautilus -q    # restart Files to see the change
 ```
 
-This sets the folder's `metadata::custom-icon-name`, which is the same thing Files' *Properties → icon* sets. The folder's contents are not changed. If Files doesn't update, run `nautilus -q` and reopen it.
+The icon names are the file names in the preview, with `folder-` in front, for example `folder-emu-gba` or `folder-keg`.
 
-The script uses `folders.local.conf` if it exists, otherwise the example `folders.conf`. You can use any icon name from MoreWaita or Adwaita, not just the ones built here. MoreWaita's are listed in `~/.local/share/icons/MoreWaita/scalable/places/`.
+## Make new icons
 
-## Icons in this theme
+Add a line to `ICONS` in `build.py`:
 
-| Icon name | Emblem |
-|---|---|
-| `folder-music`, `folder-videos`, `folder-pictures`, `folder-documents`, `folder-download(s)`, `folder-templates`, `folder-publicshare` | Adwaita's glyph for that folder |
-| `user-desktop` | monitor |
-| `folder-appimage` | Adwaita's "executable" glyph |
-| `folder-emu-gameboy`, `folder-emu-gba`, `folder-emu-nds`, `folder-emu-3ds`, `folder-emu-switch`, `folder-emu-wiiu`, `folder-emu-amiibo`, `folder-keg` | own drawings in `glyphs/`: Game Boy, GBA, DS, 3DS, Switch, Wii U GamePad, Amiibo figure, keg |
-| `folder-projects`, `folder-games`, `folder-backup`, `folder-3dbenchy`, `folder-code`, `folder-games-card`, `folder-roms`, `folder-computer`, `folder-windows` | MoreWaita's emblem, re-scaled |
+```python
+"folder-foo": "adw:some-glyph",   # Adwaita's some-glyph-symbolic.svg
+"folder-foo": "own:foo",          # glyphs/foo.svg, 16x16, drawn with currentColor
+"folder-foo": "mw:folder-bar",    # emblem from MoreWaita's folder-bar
+```
 
-## Adding or changing icons
+Run `python3 build.py && ./preview.sh` and check `build/preview.png`, then run `./install.sh`. Emblems are scaled to the same size automatically.
 
-Everything is driven by the `ICONS` table in [`build.py`](build.py). Each entry maps an icon name to an emblem source:
-
-| Source | Meaning |
-|---|---|
-| `adw:<name>` | Adwaita's `<name>-symbolic.svg`. Browse them in `/usr/share/icons/Adwaita/symbolic/`, or with the *Icon Library* app. |
-| `own:<name>` | `glyphs/<name>.svg`: a 16×16 SVG drawn with `currentColor`. Use any style, but outlines with a stroke width of 1.5 match best. |
-| `mw:<name>` | The emblem of MoreWaita's `<name>` folder icon. |
-
-Then run `./install.sh` again. To check the result before installing, run `python3 build.py && ./preview.sh`. This writes `build/preview.png`, which shows every icon at once.
-
-## Uninstall
+## Remove
 
 ```sh
-gsettings set org.gnome.desktop.interface icon-theme Adwaita
 ./apply-folder-icons.sh --reset
+/usr/bin/gsettings set org.gnome.desktop.interface icon-theme Adwaita
 rm -rf ~/.local/share/icons/MoreWaita-Folders ~/.local/share/icons/MoreWaita
 ```
 
 ## License
 
-GPL-3.0, same as MoreWaita. The generated icons combine MoreWaita's folder shape and emblems (GPL-3.0, © MoreWaita contributors) with Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0, © GNOME Project). Their files aren't stored in this repo; they're fetched or read at build time. The only exception is the rendered `docs/preview.png`, which falls under the same licenses. The console and keg glyphs in `glyphs/` are original work.
+GPL-3.0, like MoreWaita. Uses MoreWaita's folder shape and emblems, plus Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0).

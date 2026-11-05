@@ -26,6 +26,7 @@ An add-on GNOME icon theme, `MoreWaita-Folders` (inherits MoreWaita → Adwaita 
 - **Some MoreWaita icons don't fit that structure.** `folder-projects`, for example, has bare paths instead of the `g760` group, so its folder paths have other ids. They still work because only the emblem is lifted, while the folder shape always comes from `BASE_ICON` (`folder-games`).
 - **Measuring uses `magick` at 384 dpi** (4× the 96 dpi default). The result is divided by 4. If ImageMagick has no librsvg delegate, its internal renderer may mis-measure nested SVGs. Check `magick -list format | grep SVG`.
 - **Same name, theme wins.** Icon names in this theme override MoreWaita's (for example `folder-appimage`). That's intentional, but new names should use a prefix like `folder-emu-*` unless an override is meant.
+- **Use the system `gsettings`.** Homebrew's `gsettings` writes to a memory backend and reports success, but GNOME never sees the change. Check with `dconf read /org/gnome/desktop/interface/icon-theme`. `install.sh` prefers `/usr/bin/gsettings`.
 - **Use the system `gio`.** A Homebrew `gio` earlier in PATH lacks the GVFS module and fails with "Setting attribute metadata::custom-icon-name not supported". `apply-folder-icons.sh` prefers `/usr/bin/gio`, and you can override it with `GIO=...`. Use `/usr/bin/gio info -a metadata::custom-icon-name <dir>` to check a folder by hand.
 - **Nautilus caches icons.** Run `nautilus -q` after reinstalling. `gtk-update-icon-cache` is run by `install.sh`.
 
