@@ -1,6 +1,6 @@
 # MoreWaita-Folders
 
-Folder icons for GNOME Files, built on top of [MoreWaita](https://github.com/somepaulo/MoreWaita) (not a fork).
+Folder icons for GNOME Files, built on top of [MoreWaita](https://github.com/somepaulo/MoreWaita) (not a fork). Only folder and file-type icons change; app icons stay as they are.
 
 ![preview](docs/preview.png)
 
@@ -12,7 +12,7 @@ Needs `git`, `python3`, ImageMagick 7 and `gtk-update-icon-cache`.
 ./install.sh
 ```
 
-This downloads MoreWaita, builds the theme, installs both to `~/.local/share/icons/`, and sets `MoreWaita-Folders` as your icon theme. To skip setting the theme, pass `--no-activate`.
+This downloads MoreWaita, builds the theme (taking only MoreWaita's folder and file-type icons), installs it to `~/.local/share/icons/`, and sets `MoreWaita-Folders` as your icon theme. To skip setting the theme, pass `--no-activate`.
 
 ## Apply icons to folders
 
@@ -48,9 +48,9 @@ Run `python3 build.py && ./preview.sh` and check `build/preview.png`, then run `
 ```sh
 ./apply-folder-icons.sh --reset
 /usr/bin/gsettings set org.gnome.desktop.interface icon-theme Adwaita
-rm -rf ~/.local/share/icons/MoreWaita-Folders ~/.local/share/icons/MoreWaita
+rm -rf ~/.local/share/icons/MoreWaita-Folders
 ```
 
 ## License
 
-GPL-3.0, like MoreWaita. Uses MoreWaita's folder shape and emblems, plus Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0). The PlayStation logo is from Simple Icons (CC0), the N64 logo from file-icons (ISC, © John Gardner); both are trademarks of their owners.
+GPL-3.0, like MoreWaita. Uses MoreWaita's folder shape and emblems, plus Adwaita symbolic glyphs (CC-BY-SA 3.0 / LGPL-3.0). The PlayStation logo is from Simple Icons (CC0), the N64 logo from file-icons (ISC, © John Gardner), the GameCube logo from CoreUI Brands (CC0); all are trademarks of their owners.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fetch MoreWaita, build MoreWaita-Folders, install both to ~/.local/share/icons
+# Fetch MoreWaita, build MoreWaita-Folders, install it to ~/.local/share/icons
 # and (unless --no-activate) make MoreWaita-Folders the GNOME icon theme.
 #
 #   ./install.sh [--no-activate] [--ref <MoreWaita git ref>]
@@ -38,13 +38,10 @@ echo "MoreWaita $(git -C "$MW" rev-parse --short HEAD)"
 rm -rf build
 python3 -I build.py --morewaita "$MW" --out build/MoreWaita-Folders
 
-# MoreWaita's own installer copies to ~/.local/share/icons/MoreWaita (non-root)
-THEMEDIR="$ICONS/MoreWaita/" bash "$MW/install.sh" >/dev/null
-
 rm -rf "$ICONS/MoreWaita-Folders"
 cp -r build/MoreWaita-Folders "$ICONS/"
 gtk-update-icon-cache -q -f -t "$ICONS/MoreWaita-Folders"
-echo "installed to $ICONS/MoreWaita and $ICONS/MoreWaita-Folders"
+echo "installed to $ICONS/MoreWaita-Folders"
 
 if [ "$ACTIVATE" = 1 ]; then
     # system gsettings: other builds (e.g. Homebrew's) silently write to a dummy store

@@ -12,7 +12,7 @@ Every emblem is rendered with ImageMagick, measured, then scaled so its longest
 side matches the REF icon's and centred on the folder front. That keeps all
 folders the same visual size, whatever the glyph source.
 """
-import argparse, pathlib, re, subprocess, sys, tempfile
+import argparse, configparser, pathlib, re, shutil, subprocess, sys, tempfile
 import xml.etree.ElementTree as ET
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -23,6 +23,11 @@ CX, CY = 63.98, 77.41                  # emblem centre on the 128px folder
 GLYPH_BOX = (40.715766, 54.144588, 46.534498)  # x, y, size of a 16px glyph on the folder (MoreWaita's own placement)
 BASE_ICON = "folder-games"             # MoreWaita icon whose folder shape is reused
 BASE_IDS = {"g760", "rect1135", "path1953", "rect1586"}  # ids of MoreWaita's folder shape
+# MoreWaita folders copied into the theme. Not "scalable/apps": no app icon changes.
+MW_DIRS = ["scalable/places", "16x16/places", "symbolic/places", "scalable/mimetypes"]
+# Per-icon vertical nudge in 128px units (negative = up), applied after centring.
+# Corded controllers: the cord makes the emblem taller, so centring pushes the controller down.
+SHIFT_Y = {"folder-emu-nes": -3, "folder-emu-snes": -3}
 SVGNS, XLINK = "http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink"
 
 # icon name -> emblem source. Add lines here to get new icons.
@@ -50,7 +55,7 @@ ICONS = {
     "folder-emu-nes": "own:nes",
     "folder-emu-snes": "own:snes",
     "folder-emu-n64": "own:logo-n64",
-    "folder-emu-gamecube": "own:gamecube",
+    "folder-emu-gamecube": "own:logo-gamecube",
     "folder-emu-wii": "own:wii",
     "folder-emu-playstation": "own:logo-playstation",
     "folder-emu-psp": "own:psp",
@@ -147,31 +152,36 @@ def main():
                 print(f"  WARNING {n}: {ICONS[n]} reaches past the 16px grid and is clipped", file=sys.stderr)
     target = max(boxes[REF][2:])
 
+    # Take only MoreWaita's folder and file-type icons. Its app icons are left out on purpose:
+    # the theme inherits Adwaita, not MoreWaita, so app icons stay as the apps ship them.
+    for sub in MW_DIRS:
+        # symlinks=False copies the link targets (MoreWaita aliases icons via relative links).
+        # Don't add ignore_dangling_symlinks: on Python 3.15 it skips *all* symlinks.
+        shutil.copytree(a.morewaita / sub, a.out / sub, symlinks=False, dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("meson.build"))
     places = a.out / "scalable/places"
     places.mkdir(parents=True, exist_ok=True)
     for name, (defs, body) in icons.items():
         x, y, w, h = boxes[name]
         k = target / max(w, h)
         tx, ty = CX - k * (x + w / 2), CY - k * (y + h / 2)
+        ty += SHIFT_Y.get(name, 0)
         extra = "".join(ET.tostring(c, encoding="unicode") for c in defs if c.get("id") not in base_ids)
         svg = (base + (f"<defs>{extra}</defs>" if extra else "")
                + f'<g transform="matrix({k:.5f},0,0,{k:.5f},{tx:.4f},{ty:.4f})">{body}</g></svg>\n')
         (places / f"{name}.svg").write_text(svg)
         print(f"  {name:22} {ICONS[name]:34} {w:5.1f}x{h:5.1f}  x{k:.2f}")
 
-    (a.out / "index.theme").write_text("""[Icon Theme]
+    mw_index = configparser.ConfigParser(interpolation=None)
+    mw_index.optionxform = str
+    mw_index.read(a.morewaita / "index.theme")
+    sections = "".join(f"\n[{d}]\n" + "".join(f"{k}={v}\n" for k, v in mw_index[d].items()) for d in MW_DIRS)
+    (a.out / "index.theme").write_text(f"""[Icon Theme]
 Name=MoreWaita-Folders
-Comment=MoreWaita with large XDG folder icons, console folders and size-matched emblems
-Inherits=MoreWaita,Adwaita,hicolor
-Directories=scalable/places
-
-[scalable/places]
-Size=128
-MinSize=8
-MaxSize=512
-Type=Scalable
-Context=Places
-""")
+Comment=Folder icons on top of Adwaita, with MoreWaita's folder and file-type icons (no app icons)
+Inherits=Adwaita,AdwaitaLegacy,hicolor
+Directories={",".join(MW_DIRS)}
+{sections}""")
     print(f"built {len(ICONS)} icons -> {a.out}")
 
 
